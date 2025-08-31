@@ -466,6 +466,9 @@ void reglas(void) {
 void mostrar_puntuaciones(void) {
     // TERMINAR
     // ordenarlas de mayor a menor puntuacion
+    limpiar_pantalla();
+    printf("Esta funcion no esta terminada\n");
+    continuar();
 }
 
 // -- mostrar los creditos del juego --
@@ -476,7 +479,7 @@ void creditos(void) {
     printf("Github: TakYzGG\n");
     printf("Correo: takyz_gg@outlook.com\n");
     printf("\n-- Codigo fuente y ejecutables --\n");
-    printf(""); // github donde suba el codigo fuente
+    printf("https://github.com/TakYzGG/Snake-en-C\n");
     continuar();
 }
 
