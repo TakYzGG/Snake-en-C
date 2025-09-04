@@ -184,6 +184,34 @@ void continuar(void) {
     getchar();
 }
 
+// -- comprobar que esten ordenados --
+int comprobar_orden(int *array, int n) {
+    for (int i = 0; i < n -1; i++) {
+        if (array[i] > array[i + 1]) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+// -- ordenamiento burbuja --
+int ordenamiento_burbuja(int *array, int n) {
+    int continuar = 1;
+    while (continuar) {
+        for (int i = 0; i < n -1; i++) {
+            if (array[i] > array[i + 1]) {
+                int temp = array[i + 1];
+                array[i + 1] = array[i];
+                array[i] = temp;
+            }
+        }
+        // terminar el bucle
+        if (comprobar_orden(array, n)) {
+            continuar = 0;
+        }
+    }
+}
+
 // -- crear archivo para guardar los puntos --
 void create_highscore(char *player) {
     archivo = fopen(name_file, "w");
@@ -195,6 +223,53 @@ void create_highscore(char *player) {
 void add_highscore(char *player) {
     archivo = fopen(name_file, "a");
     fprintf(archivo, "%s: %d\n", player, points);
+}
+
+// -- escribir el archivo de guardado con las puntuaciones ordenadas
+void reescribir_guardado(node *puntuaciones, int n) {
+    archivo = fopen(name_file, "w");
+}
+
+// -- ordenar puntuacion --
+int ordenar_puntuacion(void) {
+    archivo = fopen(name_file, "r");
+    int inicio = 0; // saltar la primer linea
+    int i;
+    char linea[128];
+    char *separador;
+    node puntuaciones[128]; // maximo 128 jugadores
+
+    // comprobar si el archivo de guardado no existe
+    if (archivo == NULL) {
+        return 0;
+    }
+
+    // leer linea por linea
+    while (fgets(linea, sizeof(linea), archivo) != NULL) {
+        // saltar la primer linea
+        if (inicio < 1) {
+            inicio++;
+            continue;
+        }
+
+        // buscar donde estan los :
+        linea[strcspn(linea, "\n")] = '\0';
+        separador = strchr(linea, ':') ;
+
+        // si existen :
+        if (separador != NULL) {
+            *separador = '\0'; // cortar la linea
+            char *usuario = linea;
+            int points = atoi(separador +1);
+            node x;
+            x.x = usuario; // guardar usuario
+            x.y = points; // guardar puntos
+            puntuaciones[i] = x;
+            i++;
+        }
+    }
+    ordenamiento_burbuja(puntuaciones, i);
+    return 0;
 }
 
 // -- cerrar el archivo --
@@ -463,12 +538,44 @@ void reglas(void) {
 }
 
 // -- mostrar las puntuaciones --
-void mostrar_puntuaciones(void) {
-    // TERMINAR
-    // ordenarlas de mayor a menor puntuacion
+int mostrar_puntuaciones(void) {
+    archivo = fopen(name_file, "r");
+    int count = 0;
+    char linea[128];
+    char *separador;
     limpiar_pantalla();
-    printf("Esta funcion no esta terminada\n");
+
+    // comprobar si el archivo de guardado no existe
+    if (archivo == NULL) {
+        printf("No hay datos guardados\n");
+        continuar();
+        return 0;
+    }
+
+    // leer linea por linea
+    while (fgets(linea, sizeof(linea), archivo) != NULL) {
+        // saltar la primer linea
+        if (count < 1) {
+            count++;
+            continue;
+        }
+
+        // buscar donde estan los :
+        linea[strcspn(linea, "\n")] = '\0';
+        separador = strchr(linea, ':') ;
+
+        // si existen :
+        if (separador != NULL) {
+            *separador = '\0'; // cortar la linea
+            char *usuario = linea;
+            printf("usuario: %s\n", usuario);
+            int poins = atoi(separador +1);
+            printf("puntos: %d\n", poins);
+        }
+
+    }
     continuar();
+    return 0;
 }
 
 // -- mostrar los creditos del juego --
